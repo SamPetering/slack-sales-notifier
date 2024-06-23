@@ -3,9 +3,7 @@ import { invariant, alertError, allSettled } from './utils.mjs';
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const IS_DEV = ENVIRONMENT === 'development';
-const CLOSED_WON_CHANNEL_ID = process.env.CLOSED_WON_CHANNEL_ID;
 const CLOSED_WON_CHANNEL_NAME = 'closed-won';
-const PROCESSED_MESSAGES_CHANNEL_ID = process.env.PROCESSED_MESSAGES_CHANNEL_ID;
 const PROCESSED_MESSAGES_CHANNEL_NAME = 'bot-processed';
 const SLACK_TOKEN = invariant(process.env.SLACK_TOKEN, 'SLACK_TOKEN');
 const Slack = new SlackAPI(SLACK_TOKEN);
@@ -43,17 +41,15 @@ async function getOrCreateChannelId(channelName) {
 }
 
 async function getClosedWonChannelId() {
-  const closedWonChannelId =
-    CLOSED_WON_CHANNEL_ID ||
-    (await getChannelIdByName(CLOSED_WON_CHANNEL_NAME));
+  const closedWonChannelId = await getChannelIdByName(CLOSED_WON_CHANNEL_NAME);
 
   return invariant(closedWonChannelId, 'closedWonChannelId');
 }
 
 async function getProcessedMessagesChannelId() {
-  const processedMessagesChannelId =
-    PROCESSED_MESSAGES_CHANNEL_ID ||
-    (await getOrCreateChannelId(PROCESSED_MESSAGES_CHANNEL_NAME));
+  const processedMessagesChannelId = await getOrCreateChannelId(
+    PROCESSED_MESSAGES_CHANNEL_NAME
+  );
 
   return invariant(processedMessagesChannelId, 'processedMessagesChannelId');
 }
