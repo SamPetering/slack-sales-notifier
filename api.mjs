@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-redeclare
+/* global fetch */
+
 import { errorValues } from './utils.mjs';
 
 class SlackAPI {

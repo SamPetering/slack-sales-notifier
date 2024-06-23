@@ -25,9 +25,7 @@ async function getChannelIdByName(searchString, alert = true) {
 }
 
 async function getOrCreateChannelId(channelName) {
-  if (!channelName) {
-    alertError('No channel name provided', true);
-  }
+  if (!channelName) return alertError('No channel name provided', true);
 
   const found = await getChannelIdByName(channelName, false);
   if (found) return found;
@@ -35,7 +33,8 @@ async function getOrCreateChannelId(channelName) {
   console.info(`couldn't find channel ${channelName}... creating`);
 
   const [newChannel, err] = await Slack.createChannel(channelName);
-  if (err) alertError(err, true);
+  if (err) return alertError(err, true);
+
   console.info(`Successfully created channel ${channelName}`);
   return newChannel.id;
 }
@@ -73,7 +72,7 @@ function extractClosedWonData(inputStr) {
 
 async function channelHasMessage(channelId, messageText) {
   const [messages, err] = await Slack.getChannelMessages(channelId, 100);
-  if (err) alertError(err, true);
+  if (err) return alertError(err, true);
   return messages.some((m) => m.text.includes(messageText));
 }
 
